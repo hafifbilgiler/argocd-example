@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: skylight-db-controller
+  namespace: pythonapp
+  labels:
+    app: skylight-db-controller
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: skylight-db-controller
+  template:
+    metadata:
+      labels:
+        app: skylight-db-controller
+    spec:
+      restartPolicy: Always
+      containers:
+      - name: db-controller
+        image: hafifbilgiler/test-app-python:1.0
+        imagePullPolicy: Always
+        envFrom:
+        - secretRef:
+            name: skylight-db-secret
+        env:
+        - name: INTERVAL_TIME
+          value: "30"
+        resources:
+          requests:
+            cpu: "50m"
+            memory: "64Mi"
+          limits:
+            cpu: "200m"
+            memory: "256Mi"
